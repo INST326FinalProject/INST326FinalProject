@@ -35,3 +35,16 @@ class BudgetApp:
         """
         expense = Expense(amount, category, description)
         self.expenses.append(expense)
+    def set_monthly_budget(self, category, amount):
+        """
+        Set the monthly budget for a specific category.
+
+        Parameters:
+        - category (str): The category for which the budget is being set.
+        - amount (float): The budget amount.
+        """
+        self.monthly_budgets[category] = amount
+        print(f"Monthly budget for {category}: ${amount}")
+
+    def provide_financial_tips(self):
+        """Provide some generic financial tips."""
