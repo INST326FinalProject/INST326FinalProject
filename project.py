@@ -68,3 +68,24 @@ class BudgetApp:
         if total_spent > limit:
             print("You have exceeded your spending limit!")
 
+# Example usage
+if __name__ == "__main__":
+    app = BudgetApp()
+
+    # Adding expenses
+    app.add_expense(50, "Food", "Lunch")
+    app.add_expense(30, "Transportation", "Uber")
+    app.add_expense(100, "Entertainment", "Movie tickets")
+
+    # Displaying spending breakdown
+    print("Spending Breakdown:")
+    app.display_spending_breakdown()
+
+    # Setting spending limit and notifying
+    app.notify_spending_limit(150)
+
+    # Setting monthly budget
+    app.set_monthly_budget("Food", 200)
+
+    # Providing financial tips
+    app.provide_financial_tips()
