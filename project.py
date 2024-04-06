@@ -1,21 +1,22 @@
 import datetime
 
 class Expense:
-    """Class to represent an expense
-    """
+    """Class to represent an expense."""
+
     def __init__(self, amount, category, description):
-        """Initialize an expense object
-        
-        Args:
-            amount (float): the amount of the expense
-            category (str): the category of the expense
-            description (str): description of the expense
+        """
+        Initialize an expense object.
+
+        Parameters:
+        - amount (float): The amount of the expense.
+        - category (str): The category of the expense.
+        - description (str): Description of the expense.
         """
         self.amount = amount
         self.category = category
         self.description = description
         self.date = datetime.datetime.now()
-        
+
 class BudgetApp:
     """Class to represent a budgeting and expense tracking application."""
 
@@ -35,20 +36,7 @@ class BudgetApp:
         """
         expense = Expense(amount, category, description)
         self.expenses.append(expense)
-    def set_monthly_budget(self, category, amount):
-        """
-        Set the monthly budget for a specific category.
 
-        Parameters:
-        - category (str): The category for which the budget is being set.
-        - amount (float): The budget amount.
-        """
-        self.monthly_budgets[category] = amount
-        print(f"Monthly budget for {category}: ${amount}")
-
-    def provide_financial_tips(self):
-        """Provide some generic financial tips."""
-    
     def display_spending_breakdown(self):
         """Display spending breakdown by category."""
         categories = {}
@@ -67,6 +55,27 @@ class BudgetApp:
         total_spent = sum(expense.amount for expense in self.expenses)
         if total_spent > limit:
             print("You have exceeded your spending limit!")
+
+    def set_monthly_budget(self, category, amount):
+        """
+        Set the monthly budget for a specific category.
+
+        Parameters:
+        - category (str): The category for which the budget is being set.
+        - amount (float): The budget amount.
+        """
+        self.monthly_budgets[category] = amount
+        print(f"Monthly budget for {category}: ${amount}")
+
+    def provide_financial_tips(self):
+        """Provide some generic financial tips."""
+        print("Here are some financial tips:")
+        print("- Track your expenses regularly.")
+        print("- Try to allocate your budget wisely.")
+        print("- Look for discounts and deals when shopping.")
+        print("- Consider saving a portion of your income for emergencies.")
+        print("- Avoid unnecessary impulse purchases.")
+        print("- Consider investing for long-term financial goals.")
 
 # Example usage
 if __name__ == "__main__":
