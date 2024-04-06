@@ -48,3 +48,22 @@ class BudgetApp:
 
     def provide_financial_tips(self):
         """Provide some generic financial tips."""
+        def display_spending_breakdown(self):
+        """Display spending breakdown by category."""
+        categories = {}
+        for expense in self.expenses:
+            categories[expense.category] = categories.get(expense.category, 0) + expense.amount
+        for category, amount in categories.items():
+            print(f"{category}: ${amount}")
+
+    def notify_spending_limit(self, limit):
+        """
+        Notify the user if they have exceeded the spending limit.
+
+        Parameters:
+        - limit (float): The spending limit.
+        """
+        total_spent = sum(expense.amount for expense in self.expenses)
+        if total_spent > limit:
+            print("You have exceeded your spending limit!")
+
