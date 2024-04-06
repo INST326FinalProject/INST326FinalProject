@@ -48,7 +48,8 @@ class BudgetApp:
 
     def provide_financial_tips(self):
         """Provide some generic financial tips."""
-        def display_spending_breakdown(self):
+    
+    def display_spending_breakdown(self):
         """Display spending breakdown by category."""
         categories = {}
         for expense in self.expenses:
