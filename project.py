@@ -36,11 +36,11 @@ class BudgetApp:
         """
         expense = Expense(amount, category, description)
         self.expenses.append(expense)
-    
+
     def add_expense_auto(self, amount, category, description):
         """
         Add an expense automatically with the current date.
-        
+
         Parameters:
         - amount (float): The amount of the expense.
         - category (str): The category of the expense.
@@ -90,48 +90,36 @@ class BudgetApp:
         print("- Avoid unnecessary impulse purchases.")
         print("- Consider investing for long-term financial goals.")
 
-# Example usage
-if __name__ == "__main__":
-    # Creating a BudgetApp object
+def main():
     app = BudgetApp()
+    print("Welcome to EduWallet!")
+    while True:
+        print("\n1. Add Expense")
+        print("2. Display Spending Breakdown")
+        print("3. Set Monthly Budget")
+        print("4. Get Financial Tips")
+        print("5. Exit")
+        choice = input("Enter your choice: ")
 
-    # Adding expenses manually
-    app.add_expense(50, "Food", "Lunch")
-    app.add_expense(30, "Transportation", "Uber")
+        if choice == '1':
+            amount = float(input("Enter the amount of the expense: "))
+            category = input("Enter the category of the expense: ")
+            description = input("Enter the description of the expense: ")
+            app.add_expense(amount, category, description)
+        elif choice == '2':
+            print("\nSpending Breakdown:")
+            app.display_spending_breakdown()
+        elif choice == '3':
+            category = input("Enter the category for the monthly budget: ")
+            amount = float(input("Enter the monthly budget amount: "))
+            app.set_monthly_budget(category, amount)
+        elif choice == '4':
+            app.provide_financial_tips()
+        elif choice == '5':
+            print("Thank you for using EduWallet!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
 
-    # Adding expenses automatically
-    app.add_expense_auto(100, "Entertainment", "Movie tickets")
-
-    # Displaying spending breakdown
-    print("Spending Breakdown:")
-    app.display_spending_breakdown()
-
-    # Setting spending limit and notifying (exceeding limit)
-    app.notify_spending_limit(100)
-
-    # Setting monthly budget
-    app.set_monthly_budget("Food", 200)
-
-    # Providing financial tips
-    app.provide_financial_tips()
-
-    # Additional test cases
-
-    # Adding more expenses to test spending breakdown
-    app.add_expense(20, "Food", "Dinner")
-    app.add_expense(25, "Entertainment", "Concert tickets")
-
-    # Displaying updated spending breakdown
-    print("Updated Spending Breakdown:")
-    app.display_spending_breakdown()
-
-    # Setting spending limit and notifying (within limit)
-    app.notify_spending_limit(200)
-
-    # Setting monthly budget for another category
-    app.set_monthly_budget("Transportation", 150)
-
-    # Displaying monthly budgets
-    print("Monthly Budgets:")
-    for category, budget in app.monthly_budgets.items():
-        print(f"{category}: ${budget}")
+if __name__ == "__main__":
+    main()
