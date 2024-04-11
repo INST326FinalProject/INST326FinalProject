@@ -36,6 +36,19 @@ class BudgetApp:
         """
         expense = Expense(amount, category, description)
         self.expenses.append(expense)
+    
+    def add_expense_auto(self, amount, category, description):
+        """
+        Add an expense automatically with the current date.
+        
+        Parameters:
+        - amount (float): The amount of the expense.
+        - category (str): The category of the expense.
+        - description (str): Description of the expense.
+        """
+        expense = Expense(amount, category, description)
+        self.expenses.append(expense)
+        print(f"Automatically added expense of ${amount} to {category} on {expense.date}")
 
     def display_spending_breakdown(self):
         """Display spending breakdown by category."""
@@ -79,22 +92,46 @@ class BudgetApp:
 
 # Example usage
 if __name__ == "__main__":
+    # Creating a BudgetApp object
     app = BudgetApp()
 
-    # Adding expenses
+    # Adding expenses manually
     app.add_expense(50, "Food", "Lunch")
     app.add_expense(30, "Transportation", "Uber")
-    app.add_expense(100, "Entertainment", "Movie tickets")
+
+    # Adding expenses automatically
+    app.add_expense_auto(100, "Entertainment", "Movie tickets")
 
     # Displaying spending breakdown
     print("Spending Breakdown:")
     app.display_spending_breakdown()
 
-    # Setting spending limit and notifying
-    app.notify_spending_limit(150)
+    # Setting spending limit and notifying (exceeding limit)
+    app.notify_spending_limit(100)
 
     # Setting monthly budget
     app.set_monthly_budget("Food", 200)
 
     # Providing financial tips
     app.provide_financial_tips()
+
+    # Additional test cases
+
+    # Adding more expenses to test spending breakdown
+    app.add_expense(20, "Food", "Dinner")
+    app.add_expense(25, "Entertainment", "Concert tickets")
+
+    # Displaying updated spending breakdown
+    print("Updated Spending Breakdown:")
+    app.display_spending_breakdown()
+
+    # Setting spending limit and notifying (within limit)
+    app.notify_spending_limit(200)
+
+    # Setting monthly budget for another category
+    app.set_monthly_budget("Transportation", 150)
+
+    # Displaying monthly budgets
+    print("Monthly Budgets:")
+    for category, budget in app.monthly_budgets.items():
+        print(f"{category}: ${budget}")
