@@ -92,7 +92,7 @@ class BudgetApp:
 
 def main():
     app = BudgetApp()
-    print("Welcome to EduWallet!")
+    print("Welcome to BudgetApp!")
     while True:
         print("\n1. Add Expense")
         print("2. Display Spending Breakdown")
@@ -102,7 +102,12 @@ def main():
         choice = input("Enter your choice: ")
 
         if choice == '1':
-            amount = float(input("Enter the amount of the expense: "))
+            while True:
+                try:
+                    amount = float(input("Enter the amount of the expense: "))
+                    break
+                except ValueError:
+                    print("Error: Invalid input. Please enter a valid amount.")
             category = input("Enter the category of the expense: ")
             description = input("Enter the description of the expense: ")
             app.add_expense(amount, category, description)
@@ -110,13 +115,18 @@ def main():
             print("\nSpending Breakdown:")
             app.display_spending_breakdown()
         elif choice == '3':
-            category = input("Enter the category for the monthly budget: ")
-            amount = float(input("Enter the monthly budget amount: "))
+            while True:
+                try:
+                    category = input("Enter the category for the monthly budget: ")
+                    amount = float(input("Enter the monthly budget amount: "))
+                    break
+                except ValueError:
+                    print("Error: Invalid input. Please enter a valid amount.")
             app.set_monthly_budget(category, amount)
         elif choice == '4':
             app.provide_financial_tips()
         elif choice == '5':
-            print("Thank you for using EduWallet!")
+            print("Thank you for using BudgetApp!")
             break
         else:
             print("Invalid choice. Please try again.")
