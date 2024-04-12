@@ -146,3 +146,24 @@ def main():
 
 if __name__ == "__main__":
     main()
+def provide_financial_tips(self):
+        """Provide financial tips based on spending patterns."""
+        categories = {}
+        for expense in self.expenses:
+            categories[expense.category] = categories.get(expense.category, 0) + expense.amount
+
+        print("Here are some financial tips based on your spending patterns:")
+        if categories.get("Food", 0) > 0.3 * sum(categories.values()):
+            print("- Consider reducing your spending on food. Try cooking at home more often.")
+        if categories.get("Transportation", 0) > 0.2 * sum(categories.values()):
+            print("- Look for cheaper transportation options or consider carpooling.")
+        if categories.get("Entertainment", 0) > 0.1 * sum(categories.values()):
+            print("- Be mindful of your entertainment expenses. Consider free or low-cost activities.")
+        if categories.get("Shopping", 0) > 0.2 * sum(categories.values()):
+            print("- Avoid impulse purchases and stick to your shopping list to save money.")
+        if categories.get("Utilities", 0) > 0.1 * sum(categories.values()):
+            print("- Try to reduce your utility bills by being more energy-efficient.")
+        if categories.get("Healthcare", 0) > 0.1 * sum(categories.values()):
+            print("- Review your healthcare expenses and see if there are ways to save on medical costs.")
+        if categories.get("Other", 0) > 0.1 * sum(categories.values()):
+            print("- Keep track of miscellaneous expenses to ensure they don't add up.")
