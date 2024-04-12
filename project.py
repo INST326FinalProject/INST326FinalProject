@@ -89,6 +89,15 @@ class BudgetApp:
         print("- Consider saving a portion of your income for emergencies.")
         print("- Avoid unnecessary impulse purchases.")
         print("- Consider investing for long-term financial goals.")
+        
+    def calculate_monthly_spending(self, month, year): 
+        """ Calculate the total amount spent in a given month. 
+        
+        Parameters: 
+        - month (int): The month for which spending is calculated (1-12). 
+        - year (int): The year for which spending is calculated. """ 
+        total_spent = sum(expense.amount for expense in self.expenses if expense.date.month == month and expense.date.year == year) 
+        print(f"Total spent in {datetime.datetime(month=month, year=year, day=1).strftime('%B %Y')}: ${total_spent}")
 
 def main():
     app = BudgetApp()
@@ -98,9 +107,9 @@ def main():
         print("2. Display Spending Breakdown")
         print("3. Set Monthly Budget")
         print("4. Get Financial Tips")
-        print("5. Exit")
+        print("5. Calculate Monthly Spending")
+        print("6. Exit")
         choice = input("Enter your choice: ")
-
         if choice == '1':
             while True:
                 try:
@@ -126,6 +135,10 @@ def main():
         elif choice == '4':
             app.provide_financial_tips()
         elif choice == '5':
+            month = int(input("Enter the month (1-12): "))
+            year = int(input("Enter the year: "))
+            app.calculate_monthly_spending(month, year)
+        elif choice == '6':
             print("Thank you for using BudgetApp!")
             break
         else:
