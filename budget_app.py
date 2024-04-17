@@ -17,6 +17,19 @@ class Expense:
         self.description = description
         self.date = datetime.datetime.now()
 
+class FinancialGoal:
+    def __init__(self, name, target_amount, deadline):
+        self.name = name
+        self.target_amount = target_amount
+        self.deadline = deadline
+        self.current_amount = 0
+
+    def add_contribution(self, amount):
+        """Add a contribution towards achieving the goal."""
+        self.current_amount += amount
+        if self.current_amount >= self.target_amount:
+            print(f"Congratulations! You've reached your goal: {self.name}")
+
 class BudgetApp:
     """Class to represent a budgeting and expense tracking application."""
 
@@ -79,6 +92,13 @@ class BudgetApp:
         """
         self.monthly_budgets[category] = amount
         print(f"Monthly budget for {category}: ${amount}")
+    
+    def check_budget_limits(self):
+        """Check if spending is nearing the set limit for any category."""
+        for category, budget in self.monthly_budgets.items():
+            spent = sum(expense.amount for expense in self.expenses if expense.category == category)
+            if spent / budget >= 0.9:  # 90% of budget spent
+                print(f"Alert: You've spent 90% of your budget for {category}!")
 
     def provide_financial_tips(self):
         """Provide some generic financial tips."""
