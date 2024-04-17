@@ -98,6 +98,25 @@ class BudgetApp:
         - year (int): The year for which spending is calculated. """ 
         total_spent = sum(expense.amount for expense in self.expenses if expense.date.month == month and expense.date.year == year) 
         print(f"Total spent in {datetime.datetime(month=month, year=year, day=1).strftime('%B %Y')}: ${total_spent}")
+    
+    def save_data(self, filepath='expenses_data.json'):
+        """Save expenses and monthly budgets to a file."""
+        data = {
+            'expenses': [{'amount': e.amount, 'category': e.category, 'description': e.description, 'date': e.date.strftime('%Y-%m-%d %H:%M:%S')} for e in self.expenses],
+            'monthly_budgets': self.monthly_budgets
+        }
+        with open(filepath, 'w') as file:
+            json.dump(data, file, indent=4)
+
+    def load_data(self, filepath='expenses_data.json'):
+        """Load expenses and monthly budgets from a file."""
+        try:
+            with open(filepath, 'r') as file:
+                data = json.load(file)
+                self.expenses = [Expense(expense['amount'], expense['category'], expense['description'], datetime.datetime.strptime(expense['date'], '%Y-%m-%d %H:%M:%S')) for expense in data['expenses']]
+                self.monthly_budgets = data['monthly_budgets']
+        except FileNotFoundError:
+            print("No previous data found. Starting fresh.")
 
 def main():
     app = BudgetApp()
