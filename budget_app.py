@@ -1,4 +1,5 @@
 import datetime
+import json
 
 class Expense:
     """Class to represent an expense."""
@@ -37,6 +38,7 @@ class BudgetApp:
         """Initialize a BudgetApp object."""
         self.expenses = []  # List to store expense objects
         self.monthly_budgets = {}  # Dictionary to store monthly budgets
+        self.goals = []
 
     def add_expense(self, amount, category, description):
         """
