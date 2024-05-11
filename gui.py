@@ -1,6 +1,7 @@
 import tkinter as tk
-from tkinter import simpledialog, messagebox
+from tkinter import messagebox, simpledialog, Scrollbar, Canvas, Frame
 from budget_app import BudgetApp
+import datetime
 
 class BudgetAppGUI:
     def __init__(self, master):
@@ -8,34 +9,51 @@ class BudgetAppGUI:
         self.app = BudgetApp()
         self.app.load_data()
 
-        master.title("BudgetApp")
+        master.title("EduWallet")
+        
+        # Create a canvas and a vertical scrollbar
+        canvas = Canvas(master)
+        scrollbar = Scrollbar(master, orient="vertical", command=canvas.yview)
+        scrollable_frame = Frame(canvas)
+        
+        # Configure the canvas to use the scrollbar
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(
+                scrollregion=canvas.bbox("all")
+            )
+        )
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        
+        # Grid the canvas and scrollbar
+        canvas.grid(row=0, column=0, sticky="news")
+        scrollbar.grid(row=0, column=1, sticky='ns')
+        
+        # Making the grid expandable
+        master.grid_rowconfigure(0, weight=1)
+        master.grid_columnconfigure(0, weight=1)
 
         # Setup for expense entry
-        tk.Label(master, text="Amount:").grid(row=0)
-        tk.Label(master, text="Category:").grid(row=1)
-        tk.Label(master, text="Description:").grid(row=2)
+        tk.Label(scrollable_frame, text="Amount:").grid(row=0)
+        tk.Label(scrollable_frame, text="Category:").grid(row=1)
+        tk.Label(scrollable_frame, text="Description:").grid(row=2)
 
-        self.amount_entry = tk.Entry(master)
-        self.category_entry = tk.Entry(master)
-        self.description_entry = tk.Entry(master)
+        self.amount_entry = tk.Entry(scrollable_frame)
+        self.category_entry = tk.Entry(scrollable_frame)
+        self.description_entry = tk.Entry(scrollable_frame)
 
         self.amount_entry.grid(row=0, column=1)
         self.category_entry.grid(row=1, column=1)
         self.description_entry.grid(row=2, column=1)
 
-        # Button to add an expense
-        tk.Button(master, text="Add Expense", command=self.add_expense).grid(row=3, columnspan=2)
-
-        # Button to add a goal
-        tk.Button(master, text="Add Goal", command=self.add_goal).grid(row=4, columnspan=2)
-
-        # Button for contributing to a goal
-        tk.Button(master, text="Contribute to Goal", command=self.contribute_to_goal).grid(row=5, columnspan=2)
-
-        # Listbox to display goals
-        self.goals_listbox = tk.Listbox(master)
-        self.goals_listbox.grid(row=6, columnspan=2, sticky="ew")
-        self.update_goals_listbox()
+        # Buttons to interact with the app
+        tk.Button(scrollable_frame, text="Add Expense", command=self.add_expense).grid(row=3, columnspan=2)
+        tk.Button(scrollable_frame, text="Show Spending Breakdown", command=self.show_spending_breakdown).grid(row=4, columnspan=2)
+        tk.Button(scrollable_frame, text="Set Monthly Budget", command=self.set_monthly_budget).grid(row=5, columnspan=2)
+        tk.Button(scrollable_frame, text="Show Financial Tips", command=self.show_financial_tips).grid(row=7, columnspan=2)
+        tk.Button(scrollable_frame, text="Calculate Monthly Spending", command=self.calculate_monthly_spending).grid(row=6, columnspan=2)
+        tk.Button(scrollable_frame, text="Save Data", command=self.save_data).grid(row=8, columnspan=2)
 
     def add_expense(self):
         try:
@@ -43,53 +61,53 @@ class BudgetAppGUI:
             category = self.category_entry.get()
             description = self.description_entry.get()
             self.app.add_expense(amount, category, description)
-            self.check_budget_limits()
             self.app.save_data()
             messagebox.showinfo("Success", "Expense added successfully.")
             self.amount_entry.delete(0, tk.END)
             self.category_entry.delete(0, tk.END)
             self.description_entry.delete(0, tk.END)
-            self.update_goals_listbox()
+            self.check_budget_limits()  # Check budget limits after adding an expense
         except ValueError:
             messagebox.showerror("Error", "Invalid amount entered.")
 
-    def add_goal(self):
-        name = simpledialog.askstring("Input", "Goal name:", parent=self.master)
-        target_amount = simpledialog.askfloat("Input", "Target amount:", parent=self.master)
-        if name and target_amount:
-            self.app.add_goal(name, target_amount, "2023-12-31")  # Simplified: Consider adding date picker for deadline
-            self.update_goals_listbox()
-            messagebox.showinfo("Success", "Goal added successfully.")
+    def show_spending_breakdown(self):
+        categories = {}
+        for expense in self.app.expenses:
+            categories[expense.category] = categories.get(expense.category, 0) + expense.amount
+        breakdown = '\n'.join([f"{cat}: ${amt:.2f}" for cat, amt in categories.items()])
+        messagebox.showinfo("Spending Breakdown", breakdown)
+
+    def set_monthly_budget(self):
+        category = simpledialog.askstring("Input", "Enter category:", parent=self.master)
+        if category:
+            amount = simpledialog.askfloat("Input", f"Enter budget amount for {category}:", parent=self.master)
+            if amount is not None:
+                self.app.set_monthly_budget(category, amount)
+                self.app.save_data()
+                messagebox.showinfo("Success", f"Budget set for {category}: ${amount:.2f}")
+
+    def show_financial_tips(self):
+        tips = self.app.provide_financial_tips()
+        if tips:
+            messagebox.showinfo("Financial Tips", tips)
         else:
-            messagebox.showerror("Error", "Invalid input for goal.")
+            messagebox.showinfo("Financial Tips", "No specific tips available based on your current spending.")
 
-    def contribute_to_goal(self):
-        goal_names = [goal.name for goal in self.app.goals]
-        goal_name = simpledialog.askstring("Contribute to Goal", "Enter goal name:", parent=self.master)
-        if goal_name in goal_names:
-            amount = simpledialog.askfloat("Contribute to Goal", "Enter amount:", parent=self.master)
-            if amount:
-                for goal in self.app.goals:
-                    if goal.name == goal_name:
-                        goal.add_contribution(amount)
-                        self.update_goals_listbox()
-                        self.app.save_data()
-                        messagebox.showinfo("Success", f"Contributed ${amount} to {goal_name}.")
-                        break
-        else:
-            messagebox.showerror("Error", "Goal not found.")
-
-    def update_goals_listbox(self):
-        self.goals_listbox.delete(0, tk.END)  # Clear current items
-        for goal in self.app.goals:
-            progress = (goal.current_amount / goal.target_amount) * 100 if goal.target_amount > 0 else 0
-            self.goals_listbox.insert(tk.END, f"{goal.name}: {progress:.2f}% towards ${goal.target_amount}")
-
+    def calculate_monthly_spending(self):
+        month = simpledialog.askinteger("Input", "Enter month (1-12):", parent=self.master, minvalue=1, maxvalue=12)
+        year = simpledialog.askinteger("Input", "Enter year:", parent=self.master, minvalue=2000, maxvalue=datetime.datetime.now().year)
+        if month and year:
+            self.app.calculate_monthly_spending(month, year)
+    
     def check_budget_limits(self):
         for category, budget in self.app.monthly_budgets.items():
             spent = sum(expense.amount for expense in self.app.expenses if expense.category == category)
-            if spent >= budget * 0.9:  # Trigger alert at 90% of budget
-                messagebox.showwarning("Budget Limit Alert", f"You have reached 90% of your {category} budget.")
+            if spent > budget:
+                messagebox.showwarning("Budget Limit Exceeded", f"You have exceeded your budget for {category}!\nBudget: ${budget:.2f}\nSpent: ${spent:.2f}")
+
+    def save_data(self):
+        self.app.save_data()
+        messagebox.showinfo("Data Saved", "All data has been saved to file.")
 
 def main():
     root = tk.Tk()
